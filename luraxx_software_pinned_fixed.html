@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Luraxx Software</title>
+<style>
+:root{color-scheme:dark;--bg:#080a12;--panel:#111522;--panel2:#171c2d;--ink:#f7f8ff;--muted:#a8b0c8;--line:rgba(255,255,255,.12);--violet:#8b5cf6;--cyan:#45d9ff}
+*{box-sizing:border-box}
+html{min-height:100%;scroll-behavior:smooth}
+body{margin:0;min-height:100vh;padding:0 0 48px;background:radial-gradient(ellipse at 12% 0%,rgba(96,58,180,.22),transparent 36%),radial-gradient(ellipse at 88% 8%,rgba(30,150,205,.15),transparent 30%),var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to bottom,black,transparent 85%)}
+header{position:relative;max-width:1400px;margin:0 auto;padding:62px 34px 38px;animation:fadeUp .7s ease both}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;color:#b9a5ff;text-transform:uppercase;letter-spacing:.18em;font-size:.76rem;font-weight:800}
+.eyebrow:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 16px var(--cyan)}
+h1{font-size:clamp(2.8rem,7vw,5.8rem);letter-spacing:-.065em;line-height:.98;margin:20px 0 18px;font-weight:850}
+h1 span{background:linear-gradient(100deg,#fff 10%,#c5b4ff 52%,#58ddff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.subtitle{max-width:660px;color:var(--muted);font-size:clamp(1rem,2vw,1.2rem);line-height:1.7;margin:0}
+#status{position:relative;max-width:1332px;margin:0 auto 24px;padding:0 34px;color:var(--muted);font-size:.9rem}
+#projects{position:relative;max-width:1400px;margin:0 auto;padding:0 34px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:22px}
+.project{position:relative;isolation:isolate;overflow:hidden;min-height:320px;padding:25px;border-radius:27px;border:1px solid var(--line);background:linear-gradient(145deg,rgba(25,30,49,.94),rgba(13,16,27,.96));box-shadow:0 18px 55px rgba(0,0,0,.2);display:flex;flex-direction:column;align-items:flex-start;gap:17px;transition:transform .28s ease,border-color .28s ease,box-shadow .28s ease;animation:fadeUp .65s ease both}
+.project:before{content:"";position:absolute;z-index:-1;inset:0;background:radial-gradient(circle at 100% 0%,rgba(139,92,246,.22),transparent 45%);opacity:.8;transition:opacity .3s}
+.project:after{content:"";position:absolute;left:24px;right:24px;top:0;height:1px;background:linear-gradient(90deg,transparent,rgba(150,130,255,.8),transparent)}
+.project:hover{transform:translateY(-7px);border-color:rgba(164,139,255,.6);box-shadow:0 26px 65px rgba(0,0,0,.36),0 0 35px rgba(112,82,220,.1)}
+.project:hover:before{opacity:1}
+.project .icon-wrap{width:82px;height:82px;border-radius:23px;display:grid;place-items:center;background:linear-gradient(145deg,rgba(139,92,246,.2),rgba(69,217,255,.08));border:1px solid rgba(255,255,255,.12);box-shadow:inset 0 1px rgba(255,255,255,.1)}
+.project img{width:62px;height:62px;object-fit:contain;filter:drop-shadow(0 8px 18px rgba(0,0,0,.25))}
+.project h2{font-size:clamp(1.5rem,2.3vw,2rem);font-weight:750;letter-spacing:-.035em;margin:2px 0 0;overflow-wrap:anywhere}
+.project .meta{font-size:.9rem;color:var(--muted);margin-top:-8px}
+.project button{margin-top:auto;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;border:1px solid rgba(255,255,255,.13);border-radius:15px;padding:14px 18px;background:linear-gradient(100deg,#8055ed,#5b6ef5 65%,#3cbbdf);color:white;font:inherit;font-size:1rem;font-weight:750;cursor:pointer;box-shadow:0 8px 24px rgba(102,83,226,.24);transition:filter .2s,transform .2s,box-shadow .2s}
+.project button:after{content:"↓";font-size:1.2rem;transition:transform .2s}
+.project button:hover{filter:brightness(1.12);transform:translateY(-2px);box-shadow:0 12px 30px rgba(102,83,226,.38)}
+.project button:hover:after{transform:translateY(3px)}
+button:disabled{opacity:.55;cursor:wait}
+#overlay{position:fixed;inset:0;background:rgba(3,5,12,.78);backdrop-filter:blur(15px);display:none;align-items:center;justify-content:center;padding:20px;z-index:5}
+#overlay.open{display:flex;animation:fadeIn .22s ease both}
+.dialog{width:min(850px,100%);max-height:92vh;overflow:auto;position:relative;border:1px solid rgba(255,255,255,.16);border-radius:30px;background:linear-gradient(145deg,#171c2e,#0c101c 78%);box-shadow:0 35px 110px rgba(0,0,0,.6);padding:28px;animation:dialogIn .3s cubic-bezier(.2,.8,.2,1) both}
+.dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
+.dialog-head h2{margin:0;font-size:clamp(1.6rem,4vw,2.35rem);letter-spacing:-.04em;font-weight:800;overflow-wrap:anywhere}
+.close{width:44px;height:44px;display:grid;place-items:center;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.06);color:#fff;font-size:1.65rem;cursor:pointer;flex-shrink:0}
+.close:hover{background:rgba(255,255,255,.13)}
+.download-layout{display:grid;grid-template-columns:minmax(100px,1fr) minmax(240px,2fr) minmax(100px,1fr);gap:20px;align-items:center}
+.side-logo{width:100%;aspect-ratio:1;max-width:155px;justify-self:center;object-fit:contain;padding:17px;border-radius:30px;background:linear-gradient(145deg,rgba(139,92,246,.2),rgba(69,217,255,.09));border:1px solid rgba(255,255,255,.13);filter:drop-shadow(0 15px 30px rgba(0,0,0,.22));animation:float 4s ease-in-out infinite}
+.side-logo.right{animation-delay:-2s}
+.platform-list{min-width:0}
+.platform{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.platform:last-child{border-bottom:0}
+.platform .name{font-size:clamp(1rem,2.2vw,1.25rem);font-weight:650;overflow-wrap:anywhere}
+.platform .filecount{font-size:.78rem;color:var(--muted);margin-top:4px}
+.platform button{border:1px solid rgba(255,255,255,.13);border-radius:12px;padding:10px 13px;background:linear-gradient(100deg,#8055ed,#4e82ed);color:#fff;font:inherit;font-size:.9rem;font-weight:750;cursor:pointer;white-space:nowrap;transition:filter .2s,transform .2s}
+.platform button:hover{filter:brightness(1.15);transform:translateY(-1px)}
+#notice{margin-top:18px;color:var(--muted);font-size:.9rem;line-height:1.6;white-space:pre-wrap}
+footer{position:relative;text-align:center;color:#717b97;font-size:.82rem;margin:45px 20px 0}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes dialogIn{from{opacity:0;transform:translateY(15px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@media(max-width:650px){header{padding:42px 20px 28px}#status{padding:0 20px}#projects{padding:0 20px;grid-template-columns:1fr}.project{min-height:280px}.dialog{padding:22px 17px}.download-layout{grid-template-columns:1fr}.side-logo{display:none}.platform{gap:8px}.platform button{font-size:.82rem;padding:9px 10px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header><div class="eyebrow">Dein Software-Hub</div><h1><span>Luraxx</span><br>Software</h1><p class="subtitle">Deine Projekte. Ein Ort. Direkt verfügbar.<br>Wähle eine Anwendung und lade die gewünschten Dateien einzeln herunter.</p></header>
+<div id="status">Verbinde mit der Projektbibliothek …</div>
+<main id="projects"></main>
+<footer>MADE WITH CARE · LURAXX SOFTWARE</footer>
+
+<div id="overlay" role="dialog" aria-modal="true" aria-labelledby="dialogTitle">
+  <section class="dialog">
+    <div class="dialog-head"><h2 id="dialogTitle">Download</h2><button class="close" id="closeDialog" aria-label="Schließen">×</button></div>
+    <div class="download-layout"><img class="side-logo left" id="modalLogoLeft" alt=""><div id="platforms" class="platform-list"></div><img class="side-logo right" id="modalLogoRight" alt=""></div>
+    <div id="notice" role="status"></div>
+  </section>
+</div>
+<script>
+(() => {
+  const OWNER = 'LuraxxYT', REPO = 'Luraxx', BRANCHES = ['main','master'];
+  const API = `https://api.github.com/repos/${OWNER}/${REPO}`;
+  function rawUrl(path) { return `https://raw.githubusercontent.com/${OWNER}/${REPO}/${branch}/${path.split('/').map(encodeURIComponent).join('/')}`; }
+  const $ = s => document.querySelector(s);
+  const projectsEl = $('#projects'), statusEl = $('#status'), overlay = $('#overlay');
+  const bytes = n => {
+    if (!Number.isFinite(n)) return 'Größe unbekannt';
+    if (n < 1024) return `${n} B`;
+    const units=['KB','MB','GB','TB']; let v=n/1024, i=0;
+    while(v>=1024 && i<units.length-1){v/=1024;i++}
+    return `${v.toLocaleString('de-DE',{maximumFractionDigits:2})} ${units[i]}`;
+  };
+  let tree = [], branch = 'main';
+
+  async function getTree() {
+    let lastError;
+    for (const candidate of BRANCHES) {
+      try {
+        const response = await fetch(`${API}/git/trees/${candidate}?recursive=1&_=${Date.now()}`, {cache:'no-store', headers:{'Accept':'application/vnd.github+json'}});
+        if (!response.ok) throw new Error(response.status === 404 ? 'Branch nicht gefunden' : `GitHub antwortete mit HTTP ${response.status}`);
+        const data = await response.json();
+        if (data.truncated) throw new Error('Das Repository ist zu groß, um den vollständigen Dateibaum auf einmal zu lesen.');
+        branch = candidate; return data.tree || [];
+      } catch (e) { lastError = e; }
+    }
+    throw lastError || new Error('Repository konnte nicht geladen werden.');
+  }
+
+  function listFiles(prefix) {
+    return tree.filter(x => x.type === 'blob' && x.path.startsWith(prefix));
+  }
+  function foldersUnder(prefix) {
+    const found = new Set();
+    for (const item of tree) {
+      if (item.type !== 'blob' || !item.path.startsWith(prefix)) continue;
+      const rest = item.path.slice(prefix.length);
+      const slash = rest.indexOf('/');
+      if (slash > 0) found.add(rest.slice(0, slash));
+    }
+    return [...found].sort((a,b)=>a.localeCompare(b,'de',{sensitivity:'base'}));
+  }
+  function directFiles(prefix) {
+    return tree.filter(x => x.type === 'blob' && x.path.startsWith(prefix) && !x.path.slice(prefix.length).includes('/'));
+  }
+  function projectFolders() {
+    const roots = new Set(tree.filter(x => x.type === 'blob').map(x => x.path.split('/')[0]));
+    return [...roots].filter(name =>
+      tree.some(x => x.type === 'blob' && x.path === `${name}/icon.png`) &&
+      (tree.some(x => x.type === 'tree' && x.path === `${name}/src`) ||
+       tree.some(x => x.type === 'blob' && x.path.startsWith(`${name}/src/`)))
+    ).sort((a,b) => {
+      // Jedes essen.tial direkt im Projektordner markiert das Projekt für den ersten Platz.
+      const aPinned = tree.some(x => x.path === `${a}/essen.tial` && x.type === 'blob');
+      const bPinned = tree.some(x => x.path === `${b}/essen.tial` && x.type === 'blob');
+      if (aPinned !== bPinned) return aPinned ? -1 : 1;
+      return a.localeCompare(b, 'de', {sensitivity:'base'});
+    });
+  }
+  function formatProject(name) {
+    const src = `${name}/src/`;
+    const platforms = foldersUnder(src);
+    const files = platforms.length
+      ? listFiles(src).filter(f => platforms.some(p => f.path.startsWith(`${src}${p}/`)))
+      : listFiles(src);
+    return {name, src, platforms, files, size:files.reduce((sum,f)=>sum+(f.size||0),0)};
+  }
+  function showError(message) {
+    statusEl.textContent = message;
+    projectsEl.innerHTML = '';
+  }
+  function render() {
+    const names = projectFolders();
+    projectsEl.innerHTML = '';
+    if (!names.length) { showError('Keine Projekte gefunden. Erwartet wird pro Projekt ein Ordner mit icon.png und src/.'); return; }
+    statusEl.textContent = `${names.length} Projekte gefunden`;
+    for (const name of names) {
+      const p = formatProject(name);
+      const card = document.createElement('article'); card.className='project';
+      const iconWrap = document.createElement('div'); iconWrap.className='icon-wrap';
+      const img = document.createElement('img'); img.src=rawUrl(`${name}/icon.png`); img.alt=`${name} Logo`; img.onerror=()=>{img.style.display='none';}; iconWrap.append(img);
+      const title = document.createElement('h2'); title.textContent=name;
+      const meta = document.createElement('div'); meta.className='meta';
+      meta.textContent = p.platforms.length ? `${p.platforms.length} Systeme · ${bytes(p.size)}` : `${p.files.length} Dateien · ${bytes(p.size)}`;
+      const btn = document.createElement('button'); btn.textContent='Download';
+      btn.addEventListener('click',()=>openProject(p));
+      card.style.animationDelay = `${Math.min(projectsEl.children.length,8)*65}ms`; card.append(iconWrap,title,meta,btn); projectsEl.append(card);
+    }
+  }
+  function encodePath(path) { return path.split('/').map(encodeURIComponent).join('/'); }
+  function openProject(p) {
+    $('#dialogTitle').textContent=p.name;
+    const logoUrl = rawUrl(`${p.name}/icon.png`);
+    $('#modalLogoLeft').src = logoUrl; $('#modalLogoRight').src = logoUrl;
+    $('#modalLogoLeft').alt = `${p.name} Logo`; $('#modalLogoRight').alt = `${p.name} Logo`;
+    $('#platforms').innerHTML='';
+    $('#notice').textContent='';
+    if (p.platforms.length) {
+      for (const os of p.platforms) {
+        const files=listFiles(`${p.src}${os}/`);
+        const row=document.createElement('div'); row.className='platform';
+        const name=document.createElement('div'); name.className='name'; name.textContent=os;
+        const info=document.createElement('div'); info.className='filecount'; info.textContent=`${files.length} Dateien · ${bytes(files.reduce((s,f)=>s+(f.size||0),0))}`; name.append(info);
+        const btn=document.createElement('button'); btn.textContent='Dateien laden ↓';
+        btn.disabled=!files.length;
+        btn.addEventListener('click',()=>downloadFilesIndividually(p.name, `${p.src}${os}/`, files));
+        row.append(name,btn); $('#platforms').append(row);
+      }
+      // Files located directly in src are not silently mixed into a platform download.
+      const direct=directFiles(p.src);
+      if(direct.length) $('#notice').textContent=`Hinweis: ${direct.length} Datei(en) direkt in src/ gehören zu keinem Betriebssystem und werden bei den System-Downloads nicht mitgepackt.`;
+    } else {
+      const files=p.files;
+      const btn=document.createElement('button'); btn.textContent=`Dateien laden · ${bytes(p.size)}`; btn.disabled=!files.length;
+      btn.addEventListener('click',()=>downloadFilesIndividually(p.name, p.src, files));
+      $('#platforms').append(btn);
+      if(!files.length) $('#notice').textContent='In src/ wurden keine Dateien gefunden.';
+    }
+    overlay.classList.add('open');
+  }
+  async function downloadFilesIndividually(project, prefix, files) {
+    const notice=$('#notice');
+    const buttons=$('#platforms').querySelectorAll('button');
+    buttons.forEach(b=>b.disabled=true);
+    try {
+      if (!files.length) throw new Error('Keine Dateien zum Herunterladen gefunden.');
+      let done=0;
+      for (const file of files) {
+        const relative=file.path.slice(prefix.length);
+        if (!relative) continue;
+        notice.textContent=`Bereite Download vor … ${done+1}/${files.length}\n${relative}`;
+        const response=await fetch(rawUrl(file.path));
+        if(!response.ok) throw new Error(`Datei konnte nicht geladen werden: ${file.path} (HTTP ${response.status})`);
+        const blob=await response.blob();
+        const url=URL.createObjectURL(blob), a=document.createElement('a');
+        a.href=url;
+        // Keep the file's relative path in the downloaded filename to avoid collisions.
+        a.download=relative.replaceAll('/','__');
+        document.body.append(a); a.click(); a.remove();
+        setTimeout(()=>URL.revokeObjectURL(url),30000);
+        done++;
+        // Give the browser time to start each download separately.
+        await new Promise(resolve=>setTimeout(resolve,250));
+      }
+      notice.textContent=`Fertig: ${done} Datei(en) wurden einzeln zum Download gestartet. Dein Browser kann mehrere Downloads bestätigen lassen.`;
+    } catch(e) {
+      notice.textContent=`Download fehlgeschlagen: ${e.message}`;
+    } finally { buttons.forEach(b=>b.disabled=false); }
+  }
+  $('#closeDialog').addEventListener('click',()=>overlay.classList.remove('open'));
+  overlay.addEventListener('click',e=>{if(e.target===overlay) overlay.classList.remove('open')});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape') overlay.classList.remove('open')});
+  getTree().then(data=>{tree=data; render();}).catch(e=>showError(`Projekte konnten nicht geladen werden: ${e.message}\nPrüfe, ob das Repository öffentlich ist und GitHub API erreichbar ist.`));
+})();
+</script>
+</body>
+</html>
